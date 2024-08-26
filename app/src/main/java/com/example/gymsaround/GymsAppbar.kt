@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +25,7 @@ fun GymsAppBar(
     @StringRes title: Int,
     modifier: Modifier = Modifier,
     titleStyle: TextStyle = MaterialTheme.typography.titleLarge,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color,
     showBackButton: Boolean = true,
     onBackButtonClicked: () -> Unit,
 ) {
@@ -54,7 +55,9 @@ fun GymsAppBar(
 @Composable
 private fun PreviewRepoAppBar() {
     GymsAroundTheme {
-        GymsAppBar(title =R.string.general_screen) {
+        GymsAppBar(title = R.string.general_screen, showBackButton = false, color = colorResource(
+            id = R.color.white
+        )) {
 
         }
     }

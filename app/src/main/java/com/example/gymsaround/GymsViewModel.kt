@@ -7,23 +7,17 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
     // The state that holds the list of gyms, initially restored from saved state.
-    var state by mutableStateOf(emptyList<GymsData>())
-    val errorHandle = CoroutineExceptionHandler { _, throwable ->
+    var state by mutableStateOf(emptyList<GymData>())
+    private val errorHandle = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
     }
     private var apiService:GymsAPIService
@@ -62,7 +56,7 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     // Stores the favourite state of a gym.
-    private fun storeSelectedGyms(gym: GymsData) {
+    private fun storeSelectedGyms(gym: GymData) {
         val stateHandleList = stateHandle.get<List<Int>?>(VAF_IDS).orEmpty().toMutableList()
         if (gym.isFavourite) {
             stateHandleList.add(gym.id)
@@ -73,7 +67,7 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     // Restores the favourite state of gyms from the saved state.
-    private fun List<GymsData>.restoreSelectedGyms(): List<GymsData> {
+    private fun List<GymData>.restoreSelectedGyms(): List<GymData> {
         val gyms = this
         stateHandle.get<List<Int>?>(VAF_IDS)?.forEach { gymId ->
             gyms.find { it.id == gymId }?.isFavourite = true

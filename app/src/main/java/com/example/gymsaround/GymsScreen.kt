@@ -18,15 +18,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,14 +37,20 @@ import com.example.gymsaround.ui.theme.Purple200
 @Composable
 fun GymsScreen() {
     val vm: GymsViewModel = viewModel()
-    Column {
-        GymsAppBar(title = R.string.general_screen, showBackButton = false) {
+
+    Scaffold(
+        topBar = {
+            GymsAppBar(title = R.string.general_screen, showBackButton = false, color = colorResource(
+                id = R.color.purple_200
+            )) {
+
+            }
         }
-        LazyColumn {
+    ) { paddingValues ->
+        LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(vm.state) { gym ->
                 GymItem(gym) {
                     vm.toggleFavouriteState(it)
-
                 }
             }
         }
@@ -54,7 +59,7 @@ fun GymsScreen() {
 
 
 @Composable
-fun GymItem(dataGyms: GymsData,onClick: (Int) -> Unit) {
+fun GymItem(dataGyms: GymData, onClick: (Int) -> Unit) {
     val icon = if (dataGyms.isFavourite){
         Icons.Filled.Favorite
     }else {
@@ -97,7 +102,7 @@ fun DefaultIcons(
 }
 
 @Composable
-fun GymDetails(dataGyms: GymsData, modifier: Modifier) {
+fun GymDetails(dataGyms: GymData, modifier: Modifier) {
     Column (
         modifier = modifier
     ) {
