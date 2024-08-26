@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface GymsAPIService {
     @GET("gyms.json")
-    fun getGyms():Call<List<GymsData>>
+    suspend fun getGyms():List<GymsData>
 }

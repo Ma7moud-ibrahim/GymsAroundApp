@@ -38,7 +38,6 @@ import com.example.gymsaround.ui.theme.Purple200
 @Composable
 fun GymsScreen() {
     val vm: GymsViewModel = viewModel()
-    vm.getGyms()
     Column {
         GymsAppBar(title = R.string.general_screen, showBackButton = false) {
         }

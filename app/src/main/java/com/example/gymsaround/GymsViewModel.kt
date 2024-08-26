@@ -5,6 +5,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -12,7 +23,9 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
     // The state that holds the list of gyms, initially restored from saved state.
     var state by mutableStateOf(emptyList<GymsData>())
-
+    val errorHandle = CoroutineExceptionHandler { _, throwable ->
+        throwable.printStackTrace()
+    }
     private var apiService:GymsAPIService
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -20,13 +33,20 @@ class GymsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
             .baseUrl("https://gyms-cario-default-rtdb.firebaseio.com/")
             .build()
         apiService=retrofit.create(GymsAPIService::class.java)
+
+        getGyms()
     }
 
-    fun getGyms(){
-        apiService.getGyms().execute().body()?.let {gymsList->
-            state = gymsList.restoreSelectedGyms()
+    private fun getGyms() {
+        viewModelScope.launch(errorHandle) {
+            val gyms = getGymsFromRemoteDB()
+            state = gyms.restoreSelectedGyms()
         }
     }
+
+    private suspend fun getGymsFromRemoteDB() = withContext(Dispatchers.IO) { apiService.getGyms() }
+
+
 
     // Toggles the favourite state of a gym based on its ID.
     fun toggleFavouriteState(gymId: Int) {
