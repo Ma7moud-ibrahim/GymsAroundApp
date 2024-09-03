@@ -45,7 +45,7 @@ fun GymsScreen(onItemClick: (Int) -> Unit) {
             ) {}
         }
     ) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues)) {
+        LazyColumn(modifier = Modifier.padding(paddingValues).background(Color.LightGray)) {
             items(vm.state) { gym ->
                 GymItem(
                     dataGyms = gym,
