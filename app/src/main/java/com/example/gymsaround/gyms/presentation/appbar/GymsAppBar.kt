@@ -1,4 +1,4 @@
-package com.example.gymsaround
+package com.example.gymsaround.gyms.presentation.appbar
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import com.example.gymsaround.R
 
 @ExperimentalMaterial3Api
 @Composable

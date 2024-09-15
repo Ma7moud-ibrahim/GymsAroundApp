@@ -1,13 +1,14 @@
-package com.example.gymsaround
+package com.example.gymsaround.gyms.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.gymsaround.gyms.domain.GymData
 
 @Database(
-    entities = [GymData::class],
-    version = 2,
+    entities = [LocalGymData::class],
+    version = 3,
     exportSchema = false
 )
 abstract class GymsDatabase : RoomDatabase() {

@@ -1,40 +1,42 @@
-package com.example.gymsaround
+package com.example.gymsaround.gyms.presentation.gymslist
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.gymsaround.gyms.presentation.appbar.GymsAppBar
+import com.example.gymsaround.R
+import com.example.gymsaround.gyms.domain.GymData
+import com.example.gymsaround.gyms.presentation.details.DefaultIcons
+import com.example.gymsaround.gyms.presentation.details.GymDetails
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GymsScreen(onItemClick: (Int) -> Unit) {
-    val vm: GymsViewModel = viewModel()
+fun GymsScreen(
+    state: GymsScreenState,
+    onItemClick: (Int) -> Unit,
+    onFavouriteClick: (id: Int,oldValue: Boolean) -> Unit,
+
+) {
 
     Scaffold(
         topBar = {
@@ -45,14 +47,24 @@ fun GymsScreen(onItemClick: (Int) -> Unit) {
             ) {}
         }
     ) { paddingValues ->
-        LazyColumn(modifier = Modifier.padding(paddingValues).background(Color.LightGray)) {
-            items(vm.state) { gym ->
-                GymItem(
-                    dataGyms = gym,
-                    onClickFavouriteIcon = { vm.toggleFavouriteState(it) },
-                    onItemClick = { id -> onItemClick(id) }
-                )
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()
+        ){
+            LazyColumn(modifier = Modifier
+                .padding(paddingValues)) {
+                items(state.gyms) { gym ->
+                    GymItem(
+                        dataGyms = gym,
+                        onClickFavouriteIcon = { onFavouriteClick(gym.id, gym.isFavourite) },
+                        onItemClick = { id -> onItemClick(id) }
+                    )
+                }
             }
+            if (state.isLoading) {
+                CircularProgressIndicator()
+            }
+            state.error?.let { Text(text = it, modifier = Modifier.align(Alignment.Center)) }
         }
     }
 }

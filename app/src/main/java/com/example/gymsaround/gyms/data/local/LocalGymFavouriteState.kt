@@ -1,10 +1,10 @@
-package com.example.gymsaround
+package com.example.gymsaround.gyms.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 @Entity
-data class GymFavouriteState(
+data class LocalGymFavouriteState(
     @ColumnInfo("gym_id")
     val id: Int,
     @ColumnInfo("is_favourite")

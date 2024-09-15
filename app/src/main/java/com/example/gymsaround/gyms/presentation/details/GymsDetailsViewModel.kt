@@ -1,9 +1,13 @@
-package com.example.gymsaround
+package com.example.gymsaround.gyms.presentation.details
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.gymsaround.GymsApplication
+import com.example.gymsaround.gyms.data.local.GymsDatabase
+import com.example.gymsaround.gyms.data.remote.GymsAPIService
+import com.example.gymsaround.gyms.domain.GymData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,7 +19,7 @@ class GymsDetailsViewModel(
 ) : ViewModel() {
 
     val state = mutableStateOf<GymData?>(null)
-    private val gymsDao = GymsDatabase.getDaoInstance(GymsApplication.getApplicationContext())
+//    private val gymsDao = GymsDatabase.getDaoInstance(GymsApplication.getApplicationContext())
     private val apiService: GymsAPIService
 
     init {
@@ -31,16 +35,19 @@ class GymsDetailsViewModel(
 
     private fun getGym(id: Int) {
         viewModelScope.launch {
-            var gym = gymsDao.getGym(id)
-            if (gym == null) {
-                gym = getGymsFromRemoteDB(id)
-                gym?.let { gymsDao.addAll(listOf(it)) }
-            }
+            val gym = getGymsFromRemoteDB(id)
             state.value = gym
         }
     }
 
-    private suspend fun getGymsFromRemoteDB(id: Int): GymData? = withContext(Dispatchers.IO) {
-        apiService.getGym(id).values.firstOrNull()
+    private suspend fun getGymsFromRemoteDB(id: Int) = withContext(Dispatchers.IO) {
+        apiService.getGym(id).values.first().let {
+            GymData(
+                id = it.id ,
+                name = it.name ,
+                place = it.place,
+                isOpen = it.isOpen
+            )
+        }
     }
 }
