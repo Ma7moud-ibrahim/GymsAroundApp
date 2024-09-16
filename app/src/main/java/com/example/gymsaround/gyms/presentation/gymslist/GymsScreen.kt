@@ -22,12 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.gymsaround.gyms.presentation.appbar.GymsAppBar
 import com.example.gymsaround.R
 import com.example.gymsaround.gyms.domain.GymData
-import com.example.gymsaround.gyms.presentation.details.DefaultIcons
-import com.example.gymsaround.gyms.presentation.details.GymDetails
+import com.example.gymsaround.gyms.presentation.component.DefaultIcons
+import com.example.gymsaround.gyms.presentation.component.GymDetails
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +55,8 @@ fun GymsScreen(
                 items(state.gyms) { gym ->
                     GymItem(
                         dataGyms = gym,
-                        onClickFavouriteIcon = { onFavouriteClick(gym.id, gym.isFavourite) },
+                        onClickFavouriteIcon = {id,oldValue ->
+                            onFavouriteClick(id, oldValue) },
                         onItemClick = { id -> onItemClick(id) }
                     )
                 }
@@ -72,7 +72,7 @@ fun GymsScreen(
 @Composable
 fun GymItem(
     dataGyms: GymData,
-    onClickFavouriteIcon: (Int) -> Unit,
+    onClickFavouriteIcon: (Int,Boolean) -> Unit,
     onItemClick: (Int) -> Unit
 ) {
     val icon = if (dataGyms.isFavourite) {
@@ -93,7 +93,7 @@ fun GymItem(
             DefaultIcons(Icons.Default.Place, Modifier.weight(0.15F), "Place Icon")
             GymDetails(dataGyms, Modifier.weight(0.70F))
             DefaultIcons(icon, Modifier.weight(0.15f), "Favourite Icon") {
-                onClickFavouriteIcon(dataGyms.id)
+                onClickFavouriteIcon(dataGyms.id, dataGyms.isFavourite)
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.gymsaround.gyms.presentation.details
+package com.example.gymsaround.gyms.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

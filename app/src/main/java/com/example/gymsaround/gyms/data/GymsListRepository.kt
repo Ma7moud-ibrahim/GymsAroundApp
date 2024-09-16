@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class GymsRepository {
+class GymsListRepository {
     private var apiService = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl("https://gyms-cario-default-rtdb.firebaseio.com/")

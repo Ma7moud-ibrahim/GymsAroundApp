@@ -35,28 +35,25 @@ fun GymsAroundApp() {
     NavHost(navController = navController, startDestination = "gyms") {
         composable(route = "gyms") {
             val viewModel = viewModel<GymsViewModel>()
-            GymsScreen (
+            GymsScreen(
                 state = viewModel.state.value,
-                onItemClick = {navController.navigate("gyms/$id")
+                onItemClick = { gymId ->
+                    navController.navigate("gyms/$gymId")
                 },
                 onFavouriteClick = { id, oldValue ->
                     viewModel.toggleFavouriteState(id, oldValue)
                 }
             )
-
         }
         composable(
             route = "gyms/{gym_id}",
             arguments = listOf(navArgument("gym_id") {
                 type = NavType.IntType
-            },
-            ),
-            deepLinks = listOf(navDeepLink {
-                uriPattern = "https://www.gymsaround.com/details/{gym_id}"
-            }
-            )
-        ) {
-            GymsDetailsScreen()
+            })
+        ) { backStackEntry ->
+            val gymId = backStackEntry.arguments?.getInt("gym_id") ?: 0
+            GymsDetailsScreen(gymId = gymId)
         }
     }
+
 }

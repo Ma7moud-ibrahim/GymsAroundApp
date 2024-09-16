@@ -13,10 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import com.example.gymsaround.gyms.presentation.component.DefaultIcons
+import com.example.gymsaround.gyms.presentation.component.GymDetails
 @Composable
-fun GymsDetailsScreen() {
-    val vm: GymsDetailsViewModel = viewModel()
+fun GymsDetailsScreen(
+    gymId: Int
+) {
+    val vm: GymsDetailsViewModel = viewModel() // Use ViewModel
     val item = vm.state.value
 
     item?.let {
@@ -28,7 +31,9 @@ fun GymsDetailsScreen() {
         ) {
             DefaultIcons(
                 icon = Icons.Filled.Place,
-                modifier = Modifier.padding(bottom = 30.dp, top = 50.dp).size(65.dp),
+                modifier = Modifier
+                    .padding(bottom = 30.dp, top = 50.dp)
+                    .size(65.dp),
                 contentDescription = "Location Icon"
             )
             GymDetails(

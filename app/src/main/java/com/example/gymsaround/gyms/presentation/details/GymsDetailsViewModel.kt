@@ -15,11 +15,10 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GymsDetailsViewModel(
-    savedStateHandle: SavedStateHandle // Inject SavedStateHandle
+savedStateHandle: SavedStateHandle // Inject SavedStateHandle
 ) : ViewModel() {
 
     val state = mutableStateOf<GymData?>(null)
-//    private val gymsDao = GymsDatabase.getDaoInstance(GymsApplication.getApplicationContext())
     private val apiService: GymsAPIService
 
     init {
@@ -29,25 +28,35 @@ class GymsDetailsViewModel(
             .build()
         apiService = retrofit.create(GymsAPIService::class.java)
 
-        val gymId = savedStateHandle.get<Int>("gym_id") ?: 0
-        getGym(gymId)
+        // Get gym_id from navigation arguments
+        val gymId: Int? = savedStateHandle["gym_id"]
+        gymId?.let { id ->
+            loadGymDetails(id) // Fetch gym details using the id
+        }
     }
 
-    private fun getGym(id: Int) {
+    private fun loadGymDetails(gymId: Int) {
         viewModelScope.launch {
-            val gym = getGymsFromRemoteDB(id)
-            state.value = gym
+            try {
+                val response = apiService.getGym(gymId) // Fetch the gym data using API call
+                val gym = response.values.firstOrNull() // Extract the first gym from the map
+
+                if (gym != null) {
+                    state.value = GymData(
+                        id = gym.id,
+                        name = gym.name,
+                        place = gym.place,
+                        isOpen = gym.isOpen,
+                    )
+                } else {
+                    // Handle the case where no gym was found for the provided id
+                    throw Exception("No gym found with id: $gymId")
+                }
+            } catch (e: Exception) {
+                // Log or handle the exception appropriately
+                throw e
+            }
         }
     }
 
-    private suspend fun getGymsFromRemoteDB(id: Int) = withContext(Dispatchers.IO) {
-        apiService.getGym(id).values.first().let {
-            GymData(
-                id = it.id ,
-                name = it.name ,
-                place = it.place,
-                isOpen = it.isOpen
-            )
-        }
-    }
 }
