@@ -4,13 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.gymsaround.GymsApplication
-import com.example.gymsaround.gyms.data.local.GymsDatabase
 import com.example.gymsaround.gyms.data.remote.GymsAPIService
 import com.example.gymsaround.gyms.domain.GymData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

@@ -5,18 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.example.gymsaround.gyms.presentation.details.GymsDetailsScreen
 import com.example.gymsaround.gyms.presentation.gymslist.GymsScreen
 import com.example.gymsaround.gyms.presentation.gymslist.GymsViewModel
 import com.example.gymsaround.ui.theme.GymsAroundTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,7 @@ fun GymsAroundApp() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "gyms") {
         composable(route = "gyms") {
-            val viewModel = viewModel<GymsViewModel>()
+            val viewModel: GymsViewModel = hiltViewModel()
             GymsScreen(
                 state = viewModel.state.value,
                 onItemClick = { gymId ->

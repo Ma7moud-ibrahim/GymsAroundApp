@@ -1,4 +1,4 @@
-//package com.example.gymsaround.gyms.data
+package com.example.gymsaround.gyms.data
 //
 //import com.example.gymsaround.GymsApplication
 //import com.example.gymsaround.gyms.data.local.GymsDatabase

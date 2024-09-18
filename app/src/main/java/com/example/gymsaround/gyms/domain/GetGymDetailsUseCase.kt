@@ -1,4 +1,4 @@
-//package com.example.gymsaround.gyms.domain
+package com.example.gymsaround.gyms.domain
 //
 //import com.example.gymsaround.gyms.data.GymsDetailsRepository
 //
